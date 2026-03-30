@@ -12,6 +12,9 @@ export const usersTable = pgTable("users", {
   clinicName: text("clinic_name").notNull(),
   gstNumber: text("gst_number"),
   clinicAddress: text("clinic_address"),
+  logoUrl: text("logo_url"),
+  primaryColor: text("primary_color").default("#2F80ED"),
+  accentColor: text("accent_color").default("#27AE60"),
   createdAt: timestamp("created_at").defaultNow(),
 });
 

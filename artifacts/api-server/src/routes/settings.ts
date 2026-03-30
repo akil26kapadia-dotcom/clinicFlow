@@ -26,9 +26,15 @@ router.get("/settings", requireAuth, async (req: Request, res: Response) => {
 
 router.put("/settings", requireAuth, async (req: Request, res: Response) => {
   const userId = (req.session as any).userId;
-  const { name, phone, clinicName, gstNumber, clinicAddress } = req.body;
+  const { name, phone, clinicName, gstNumber, clinicAddress, logoUrl, primaryColor, accentColor } = req.body;
+  
+  const updateData: any = { name, phone, clinicName, gstNumber, clinicAddress };
+  if (logoUrl !== undefined) updateData.logoUrl = logoUrl;
+  if (primaryColor !== undefined) updateData.primaryColor = primaryColor;
+  if (accentColor !== undefined) updateData.accentColor = accentColor;
+
   const [user] = await db.update(usersTable)
-    .set({ name, phone, clinicName, gstNumber, clinicAddress })
+    .set(updateData)
     .where(eq(usersTable.id, userId))
     .returning();
   if (!user) {

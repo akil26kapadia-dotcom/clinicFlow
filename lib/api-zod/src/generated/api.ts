@@ -32,6 +32,9 @@ export const LoginResponse = zod.object({
     clinicName: zod.string(),
     gstNumber: zod.string().optional(),
     clinicAddress: zod.string().optional(),
+    logoUrl: zod.string().optional(),
+    primaryColor: zod.string().optional(),
+    accentColor: zod.string().optional(),
   }),
   message: zod.string(),
 });
@@ -55,6 +58,9 @@ export const GetMeResponse = zod.object({
   clinicName: zod.string(),
   gstNumber: zod.string().optional(),
   clinicAddress: zod.string().optional(),
+  logoUrl: zod.string().optional(),
+  primaryColor: zod.string().optional(),
+  accentColor: zod.string().optional(),
 });
 
 /**
@@ -668,6 +674,9 @@ export const GetSettingsResponse = zod.object({
   clinicName: zod.string(),
   gstNumber: zod.string().optional(),
   clinicAddress: zod.string().optional(),
+  logoUrl: zod.string().optional(),
+  primaryColor: zod.string().optional(),
+  accentColor: zod.string().optional(),
 });
 
 /**
@@ -679,6 +688,9 @@ export const UpdateSettingsBody = zod.object({
   clinicName: zod.string().optional(),
   gstNumber: zod.string().optional(),
   clinicAddress: zod.string().optional(),
+  logoUrl: zod.string().optional(),
+  primaryColor: zod.string().optional(),
+  accentColor: zod.string().optional(),
 });
 
 export const UpdateSettingsResponse = zod.object({
@@ -690,4 +702,7 @@ export const UpdateSettingsResponse = zod.object({
   clinicName: zod.string(),
   gstNumber: zod.string().optional(),
   clinicAddress: zod.string().optional(),
+  logoUrl: zod.string().optional(),
+  primaryColor: zod.string().optional(),
+  accentColor: zod.string().optional(),
 });

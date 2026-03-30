@@ -40,6 +40,9 @@ export interface User {
   clinicName: string;
   gstNumber?: string;
   clinicAddress?: string;
+  logoUrl?: string;
+  primaryColor?: string;
+  accentColor?: string;
 }
 
 export interface AuthResponse {
@@ -53,6 +56,9 @@ export interface UpdateSettingsRequest {
   clinicName?: string;
   gstNumber?: string;
   clinicAddress?: string;
+  logoUrl?: string;
+  primaryColor?: string;
+  accentColor?: string;
 }
 
 export interface Patient {

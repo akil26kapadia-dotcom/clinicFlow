@@ -769,6 +769,12 @@ components:
           type: string
         clinicAddress:
           type: string
+        logoUrl:
+          type: string
+        primaryColor:
+          type: string
+        accentColor:
+          type: string
       required:
         - id
         - name
@@ -788,6 +794,12 @@ components:
         gstNumber:
           type: string
         clinicAddress:
+          type: string
+        logoUrl:
+          type: string
+        primaryColor:
+          type: string
+        accentColor:
           type: string
 
     Patient:

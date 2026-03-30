@@ -15,4 +15,7 @@ export interface User {
   clinicName: string;
   gstNumber?: string;
   clinicAddress?: string;
+  logoUrl?: string;
+  primaryColor?: string;
+  accentColor?: string;
 }
