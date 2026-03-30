@@ -1,0 +1,21 @@
+packages:
+  "recharts": "For beautiful dashboard analytics charts"
+  "date-fns": "For date formatting and calendar calculations"
+  "framer-motion": "For page transitions, modal animations, and micro-interactions"
+  "react-hook-form": "For form state management"
+  "@hookform/resolvers": "For Zod form validation integration"
+  "zod": "For client-side form schema validation"
+  "clsx": "Utility for constructing className strings conditionally"
+  "tailwind-merge": "Utility for merging tailwind classes without style conflicts"
+
+images:
+  - path: "artifacts/dental-clinic/public/images/auth-bg.png"
+    description: "Abstract soft medical background, clean light blue and crisp white gradients with subtle premium geometric shapes"
+    aspect_ratio: "16:9"
+  - path: "artifacts/dental-clinic/public/images/logo.png"
+    description: "Minimal modern dental clinic logo, a stylized blue and green geometric tooth icon on transparent background"
+    aspect_ratio: "1:1"
+
+notes:
+  - "App uses generated React Query hooks from @workspace/api-client-react"
+  - "Indian currency (₹) and 18% GST logic implemented on the frontend for billing previews"

@@ -1,0 +1,308 @@
+FULL REPLIT PROMPT — Dental Clinic Management System (India) with CRUD + ₹
+
+Copy everything below and paste into Replit AI
+
+MASTER PROMPT
+
+Build a full working Dental Clinic Management Web Application that runs in the browser like a desktop application. The system is for Indian dental clinics to manage patients, appointments, treatments, billing, invoices, and reports.
+
+Use:
+
+Frontend: HTML, CSS, JavaScript
+Backend: Node.js with Express
+Database: SQLite
+Authentication: Session login
+Mobile responsive
+PWA support
+Indian currency ₹
+Proper CRUD operations for all modules
+
+This must be a fully working application, not just UI.
+
+Required CRUD Operations
+
+Implement proper CRUD for all modules:
+
+Module	Create	Read	Update	Delete
+Patients	Yes	Yes	Yes	Yes
+Appointments	Yes	Yes	Yes	Yes
+Treatments	Yes	Yes	Yes	Yes
+Invoices	Yes	Yes	Yes	Yes
+Staff	Yes	Yes	Yes	Yes
+Users	Yes	Yes	Yes	Yes
+
+Use Express routes:
+
+GET
+POST
+PUT
+DELETE
+Project Structure
+dental-clinic-app/
+│
+├── server.js
+├── package.json
+├── database.db
+│
+├── public/
+│   ├── css/style.css
+│   ├── js/app.js
+│   ├── images/
+│   ├── manifest.json
+│   └── service-worker.js
+│
+├── views/
+│   ├── login.html
+│   ├── register.html
+│   ├── dashboard.html
+│   ├── patients.html
+│   ├── appointments.html
+│   ├── treatments.html
+│   ├── billing.html
+│   ├── invoices.html
+│   ├── reports.html
+│   ├── calendar.html
+│   └── settings.html
+Dashboard
+
+Dashboard cards:
+
+Today Appointments
+Total Patients
+Monthly Revenue (₹)
+Pending Payments
+Completed Treatments
+New Patients
+
+Add charts:
+
+Monthly revenue
+Appointments per day
+Patient Management (CRUD)
+
+Fields:
+
+Patient Name
+Phone
+Email
+Address
+Age
+Gender
+Medical History
+Notes
+First Visit Date
+
+Functions:
+
+Add patient
+Edit patient
+Delete patient
+View patient history
+Search patient
+Appointment Management (CRUD)
+
+Fields:
+
+Patient
+Doctor
+Date
+Time
+Treatment
+Notes
+Status:
+Scheduled
+Completed
+Cancelled
+No Show
+
+Functions:
+
+Add appointment
+Edit appointment
+Delete appointment
+Update status
+Calendar view
+Treatments Management (CRUD)
+
+Fields:
+
+Treatment Name
+Cost (₹)
+Duration
+Description
+
+Example:
+
+Tooth Cleaning
+Filling
+Root Canal
+Extraction
+Braces
+Implant
+Whitening
+Billing / Invoice System (Indian Format)
+
+Invoice must include:
+
+Clinic Name
+Address
+Phone
+GST Number
+Invoice Number
+Invoice Date
+Patient Name
+Treatment List
+Subtotal
+Discount
+GST (18%)
+Final Total
+Payment Method
+Payment Status
+
+Currency must display:
+₹ symbol everywhere
+
+Example:
+₹500
+₹1,200
+₹5,000
+
+Auto invoice number format:
+INV-001
+INV-002
+INV-003
+
+Reports Page
+
+Reports:
+
+Daily Revenue
+Monthly Revenue
+Pending Payments
+Treatment Report
+Patient Report
+Appointment Report
+Top Treatments
+
+All reports in Indian Rupees ₹
+
+Database Tables (SQLite)
+Users
+id
+name
+email
+phone
+password
+role
+clinic_name
+gst_number
+Patients
+id
+name
+phone
+email
+address
+age
+gender
+medical_history
+notes
+first_visit
+Treatments
+id
+name
+cost
+duration
+description
+Appointments
+id
+patient_id
+doctor
+date
+time
+treatment
+notes
+status
+Invoices
+id
+invoice_number
+patient_id
+date
+subtotal
+discount
+gst
+total
+payment_method
+payment_status
+Invoice_Items
+id
+invoice_id
+treatment
+price
+Sidebar Menu
+
+Create sidebar:
+
+Dashboard
+Patients
+Appointments
+Calendar
+Treatments
+Billing
+Invoices
+Reports
+Settings
+Logout
+UI Design
+
+Modern SaaS dashboard:
+
+Sidebar
+Top navbar
+Cards
+Tables
+Modals
+Mobile responsive
+Clean UI
+Soft shadows
+Rounded corners
+
+Colors:
+
+Primary: #2F80ED
+Background: #F4F6F9
+Accent: #27AE60
+PWA Features
+
+Make installable:
+
+manifest.json
+service worker
+Add to Home Screen
+Offline basic support
+Important Requirements
+
+The system must:
+
+Have login system
+Have full CRUD operations
+Save data in SQLite
+Use Express API routes
+Show currency in ₹
+Generate invoices
+Calculate GST
+Work on mobile
+Work like software in browser
+Fully functional dental clinic management system
+Final Goal
+
+Doctor should be able to:
+
+Login
+Add patients
+Book appointments
+Add treatments
+Generate invoice
+Print bill
+View reports
+Track revenue
+Use on mobile and desktop
