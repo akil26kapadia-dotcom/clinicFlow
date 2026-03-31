@@ -5,6 +5,7 @@ import { patientsTable } from "./patients";
 
 export const appointmentsTable = pgTable("appointments", {
   id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().default(1),
   patientId: integer("patient_id").notNull().references(() => patientsTable.id),
   doctor: text("doctor").notNull(),
   date: text("date").notNull(),

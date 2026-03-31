@@ -5,53 +5,71 @@ import { eq, sql, gte, and } from "drizzle-orm";
 
 const router: IRouter = Router();
 
+function requireAuth(req: Request, res: Response): number | null {
+  const userId = (req.session as any).userId;
+  if (!userId) {
+    res.status(401).json({ error: "Not authenticated" });
+    return null;
+  }
+  return userId;
+}
+
 router.get("/dashboard/stats", async (req: Request, res: Response) => {
+  const userId = requireAuth(req, res);
+  if (!userId) return;
+
   const today = new Date().toISOString().slice(0, 10);
   const firstOfMonth = new Date();
   firstOfMonth.setDate(1);
   const monthStart = firstOfMonth.toISOString().slice(0, 10);
   const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
 
-  const [totalPatientsResult] = await db.select({ count: sql<number>`count(*)` }).from(patientsTable);
+  const [totalPatientsResult] = await db.select({ count: sql<number>`count(*)` })
+    .from(patientsTable)
+    .where(eq(patientsTable.userId, userId));
   const totalPatients = Number(totalPatientsResult.count);
 
-  const todayAppts = await db.select().from(appointmentsTable).where(eq(appointmentsTable.date, today));
+  const todayAppts = await db.select().from(appointmentsTable)
+    .where(and(eq(appointmentsTable.userId, userId), eq(appointmentsTable.date, today)));
   const todayAppointments = todayAppts.length;
 
   const monthInvoices = await db.select().from(invoicesTable)
     .where(and(
+      eq(invoicesTable.userId, userId),
       gte(invoicesTable.date, monthStart),
       eq(invoicesTable.paymentStatus, "Paid")
     ));
   const monthlyRevenue = monthInvoices.reduce((sum, inv) => sum + Number(inv.total), 0);
 
   const pendingInvoices = await db.select().from(invoicesTable)
-    .where(eq(invoicesTable.paymentStatus, "Pending"));
+    .where(and(eq(invoicesTable.userId, userId), eq(invoicesTable.paymentStatus, "Pending")));
   const pendingPayments = pendingInvoices.reduce((sum, inv) => sum + Number(inv.total), 0);
 
   const completedAppts = await db.select().from(appointmentsTable)
-    .where(eq(appointmentsTable.status, "Completed"));
+    .where(and(eq(appointmentsTable.userId, userId), eq(appointmentsTable.status, "Completed")));
   const completedTreatments = completedAppts.length;
 
   const newPatientRows = await db.select().from(patientsTable)
-    .where(gte(patientsTable.createdAt, new Date(thirtyDaysAgo)));
+    .where(and(
+      eq(patientsTable.userId, userId),
+      gte(patientsTable.createdAt, new Date(thirtyDaysAgo))
+    ));
   const newPatients = newPatientRows.length;
 
   res.json({
-    todayAppointments,
-    totalPatients,
-    monthlyRevenue,
-    pendingPayments,
-    completedTreatments,
-    newPatients,
+    todayAppointments, totalPatients, monthlyRevenue,
+    pendingPayments, completedTreatments, newPatients,
   });
 });
 
 router.get("/dashboard/revenue-chart", async (req: Request, res: Response) => {
+  const userId = requireAuth(req, res);
+  if (!userId) return;
+
   const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   const currentYear = new Date().getFullYear();
   const invoices = await db.select().from(invoicesTable)
-    .where(eq(invoicesTable.paymentStatus, "Paid"));
+    .where(and(eq(invoicesTable.userId, userId), eq(invoicesTable.paymentStatus, "Paid")));
 
   const monthlyRevenue = new Array(12).fill(0);
   for (const inv of invoices) {
@@ -65,6 +83,9 @@ router.get("/dashboard/revenue-chart", async (req: Request, res: Response) => {
 });
 
 router.get("/dashboard/appointments-chart", async (req: Request, res: Response) => {
+  const userId = requireAuth(req, res);
+  if (!userId) return;
+
   const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   const today = new Date();
   const startOfWeek = new Date(today);
@@ -77,7 +98,8 @@ router.get("/dashboard/appointments-chart", async (req: Request, res: Response) 
     const d = new Date(startOfWeek);
     d.setDate(startOfWeek.getDate() + i);
     const dateStr = d.toISOString().slice(0, 10);
-    const rows = await db.select().from(appointmentsTable).where(eq(appointmentsTable.date, dateStr));
+    const rows = await db.select().from(appointmentsTable)
+      .where(and(eq(appointmentsTable.userId, userId), eq(appointmentsTable.date, dateStr)));
     counts[i] = rows.length;
   }
 

@@ -244,8 +244,8 @@ export default function AppLayout({ children }: { children: ReactNode }) {
           {[
             { name: "Home", href: "/dashboard", icon: LayoutDashboard },
             { name: "Patients", href: "/patients", icon: Users },
-            { name: "Book", href: "/billing", icon: Receipt },
-            { name: "Invoices", href: "/invoices", icon: FileText },
+            { name: "Appts", href: "/appointments", icon: Calendar },
+            { name: "Billing", href: "/billing", icon: Receipt },
             { name: "Settings", href: "/settings", icon: Settings },
           ].map((item) => {
             const isActive = location.startsWith(item.href);
