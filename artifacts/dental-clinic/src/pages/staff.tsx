@@ -7,9 +7,11 @@ import { Card } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Plus, Edit2, Trash2, Mail, Phone } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Staff() {
   const queryClient = useQueryClient();
+  const { toast } = useToast();
   const { data: staffList, isLoading } = useListStaff();
   
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -19,9 +21,29 @@ export default function Staff() {
     name: "", role: "Dentist", phone: "", email: "", specialization: "", salary: 0, status: "Active", joiningDate: new Date().toISOString().split('T')[0]
   });
 
-  const createMut = useCreateStaff({ onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["/api/staff"] }); setIsModalOpen(false); } });
-  const updateMut = useUpdateStaff({ onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["/api/staff"] }); setIsModalOpen(false); } });
-  const deleteMut = useDeleteStaff({ onSuccess: () => queryClient.invalidateQueries({ queryKey: ["/api/staff"] }) });
+  const createMut = useCreateStaff({
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/staff"] });
+      setIsModalOpen(false);
+      toast({ title: "Staff member added", description: `${formData.name} has been added to the team.` });
+    },
+    onError: () => toast({ title: "Failed to add staff", description: "Please check the details and try again.", variant: "destructive" }),
+  });
+  const updateMut = useUpdateStaff({
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/staff"] });
+      setIsModalOpen(false);
+      toast({ title: "Staff updated", description: "Staff member details have been saved." });
+    },
+    onError: () => toast({ title: "Update failed", description: "Could not save changes.", variant: "destructive" }),
+  });
+  const deleteMut = useDeleteStaff({
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/staff"] });
+      toast({ title: "Staff member removed", description: "The record has been deleted.", variant: "destructive" });
+    },
+    onError: () => toast({ title: "Delete failed", description: "Could not remove staff member.", variant: "destructive" }),
+  });
 
   const openNew = () => {
     setEditingId(null);

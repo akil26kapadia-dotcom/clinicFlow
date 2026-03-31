@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { formatCurrency } from "@/lib/utils";
 import { Plus, Trash2, Save } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Billing() {
   const [, setLocation] = useLocation();
@@ -21,11 +22,15 @@ export default function Billing() {
   
   const [items, setItems] = useState<{treatment: string, price: number}[]>([]);
 
-  const createMut = useCreateInvoice({ 
-    onSuccess: () => { 
-      queryClient.invalidateQueries({ queryKey: ["/api/invoices"] }); 
+  const { toast } = useToast();
+
+  const createMut = useCreateInvoice({
+    onSuccess: (data: any) => {
+      queryClient.invalidateQueries({ queryKey: ["/api/invoices"] });
+      toast({ title: "Invoice created", description: `${data?.invoiceNumber || "Invoice"} has been saved successfully.` });
       setLocation("/invoices");
-    } 
+    },
+    onError: () => toast({ title: "Invoice creation failed", description: "Please fill all fields and try again.", variant: "destructive" }),
   });
 
   const addItem = () => {

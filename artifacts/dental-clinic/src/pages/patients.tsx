@@ -6,9 +6,11 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Search, Plus, Edit2, Trash2, Users, Phone, User } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Patients() {
   const queryClient = useQueryClient();
+  const { toast } = useToast();
   const [search, setSearch] = useState("");
   const { data: patients, isLoading } = useListPatients({ search: search || undefined });
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -18,9 +20,29 @@ export default function Patients() {
     name: "", phone: "", email: "", address: "", age: 0, gender: "Male", medicalHistory: ""
   });
 
-  const createMut = useCreatePatient({ onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["/api/patients"] }); setIsModalOpen(false); } });
-  const updateMut = useUpdatePatient({ onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["/api/patients"] }); setIsModalOpen(false); } });
-  const deleteMut = useDeletePatient({ onSuccess: () => queryClient.invalidateQueries({ queryKey: ["/api/patients"] }) });
+  const createMut = useCreatePatient({
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/patients"] });
+      setIsModalOpen(false);
+      toast({ title: "Patient added", description: `${formData.name} has been registered successfully.` });
+    },
+    onError: () => toast({ title: "Failed to add patient", description: "Please check the details and try again.", variant: "destructive" }),
+  });
+  const updateMut = useUpdatePatient({
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/patients"] });
+      setIsModalOpen(false);
+      toast({ title: "Patient updated", description: "Patient details have been saved." });
+    },
+    onError: () => toast({ title: "Update failed", description: "Could not save changes. Please try again.", variant: "destructive" }),
+  });
+  const deleteMut = useDeletePatient({
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/patients"] });
+      toast({ title: "Patient deleted", description: "The patient record has been removed.", variant: "destructive" });
+    },
+    onError: () => toast({ title: "Delete failed", description: "Could not delete patient. Try again.", variant: "destructive" }),
+  });
 
   const openNew = () => {
     setEditingId(null);

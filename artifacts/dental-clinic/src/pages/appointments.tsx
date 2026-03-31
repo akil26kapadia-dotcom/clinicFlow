@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Plus, Edit2, Trash2, Calendar as CalIcon, Clock, User } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const statusColors: Record<string, string> = {
   "Scheduled": "bg-blue-100 text-blue-700 border-blue-200",
@@ -23,6 +24,7 @@ const statusDots: Record<string, string> = {
 
 export default function Appointments() {
   const queryClient = useQueryClient();
+  const { toast } = useToast();
   const { data: appointments, isLoading } = useListAppointments({});
   const { data: patients } = useListPatients({});
 
@@ -33,9 +35,29 @@ export default function Appointments() {
     patientId: 0, doctor: "", date: "", time: "", treatment: "", notes: "", status: "Scheduled"
   });
 
-  const createMut = useCreateAppointment({ onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["/api/appointments"] }); setIsModalOpen(false); } });
-  const updateMut = useUpdateAppointment({ onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["/api/appointments"] }); setIsModalOpen(false); } });
-  const deleteMut = useDeleteAppointment({ onSuccess: () => queryClient.invalidateQueries({ queryKey: ["/api/appointments"] }) });
+  const createMut = useCreateAppointment({
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/appointments"] });
+      setIsModalOpen(false);
+      toast({ title: "Appointment booked", description: "The appointment has been scheduled successfully." });
+    },
+    onError: () => toast({ title: "Booking failed", description: "Could not create appointment. Please try again.", variant: "destructive" }),
+  });
+  const updateMut = useUpdateAppointment({
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/appointments"] });
+      setIsModalOpen(false);
+      toast({ title: "Appointment updated", description: "Changes have been saved." });
+    },
+    onError: () => toast({ title: "Update failed", description: "Could not update appointment.", variant: "destructive" }),
+  });
+  const deleteMut = useDeleteAppointment({
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/appointments"] });
+      toast({ title: "Appointment cancelled", description: "The appointment has been removed.", variant: "destructive" });
+    },
+    onError: () => toast({ title: "Delete failed", description: "Could not remove appointment.", variant: "destructive" }),
+  });
 
   const openNew = () => {
     setEditingId(null);

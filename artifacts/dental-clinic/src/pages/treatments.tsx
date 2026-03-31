@@ -7,9 +7,11 @@ import { Card } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Plus, Edit2, Trash2 } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Treatments() {
   const queryClient = useQueryClient();
+  const { toast } = useToast();
   const { data: treatments, isLoading } = useListTreatments();
   
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -19,9 +21,29 @@ export default function Treatments() {
     name: "", cost: 0, duration: 30, description: ""
   });
 
-  const createMut = useCreateTreatment({ onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["/api/treatments"] }); setIsModalOpen(false); } });
-  const updateMut = useUpdateTreatment({ onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["/api/treatments"] }); setIsModalOpen(false); } });
-  const deleteMut = useDeleteTreatment({ onSuccess: () => queryClient.invalidateQueries({ queryKey: ["/api/treatments"] }) });
+  const createMut = useCreateTreatment({
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/treatments"] });
+      setIsModalOpen(false);
+      toast({ title: "Service added", description: `"${formData.name}" has been added to the catalog.` });
+    },
+    onError: () => toast({ title: "Failed to add service", description: "Please check the details and try again.", variant: "destructive" }),
+  });
+  const updateMut = useUpdateTreatment({
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/treatments"] });
+      setIsModalOpen(false);
+      toast({ title: "Service updated", description: "Treatment details have been saved." });
+    },
+    onError: () => toast({ title: "Update failed", description: "Could not save changes.", variant: "destructive" }),
+  });
+  const deleteMut = useDeleteTreatment({
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/treatments"] });
+      toast({ title: "Service removed", description: "Treatment has been deleted from the catalog.", variant: "destructive" });
+    },
+    onError: () => toast({ title: "Delete failed", description: "Could not remove treatment.", variant: "destructive" }),
+  });
 
   const openNew = () => {
     setEditingId(null);
